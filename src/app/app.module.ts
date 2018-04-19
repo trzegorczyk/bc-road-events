@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms'
 import { HttpModule } from '@angular/http';
-import { DataOptions } from './data.options';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatCardModule, MatMenuModule, MatToolbarModule, MatIconModule, MatSelectModule, MatSidenavModule } from '@angular/material';
@@ -33,7 +32,7 @@ import { NamePipe } from './name.pipe';
     MatSelectModule,
     MatSidenavModule
   ],
-  providers: [HttpModule, DataOptions],
+  providers: [HttpModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

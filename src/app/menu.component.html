@@ -4,7 +4,7 @@
     <span>BC Roads</span>
     <span class="line-spacer"></span>
     <mat-form-field class="p-r-2">
-        <mat-select placeholder="Area" name="area" [ngModel]="area" (ngModelChange)="Refresh($event)">
+        <mat-select placeholder="Area" name="area" [ngModel]="area" class="white" (ngModelChange)="Refresh('area', area)">
             <mat-option value='drivebc.ca/1'>Lower Mainland District</mat-option>
             <mat-option value='drivebc.ca/2'>Vancouver Island District</mat-option>
             <mat-option value='drivebc.ca/3'>Rocky Mountain District</mat-option>
@@ -19,13 +19,13 @@
         </mat-select>
     </mat-form-field>
     <mat-form-field class="p-r-2">
-        <mat-select placeholder="Severity" name="severity" [ngModel]="severity" (ngModelChange)="Refresh($event)">
+        <mat-select placeholder="Severity" name="severity" [ngModel]="severity" (ngModelChange)="Refresh('severity', severity)">
             <mat-option value='MAJOR'>Major</mat-option>
             <mat-option value='MINOR'>Minor</mat-option>
         </mat-select>
     </mat-form-field>
     <mat-form-field>
-        <mat-select placeholder="Event Type" name="eventType" [ngModel]="eventType" (ngModelChange)="Refresh($event)">
+        <mat-select placeholder="Event Type" name="eventType" [ngModel]="eventType" (ngModelChange)="Refresh('eventType', eventType)">
             <mat-option value='CONSTRUCTION'>Construction</mat-option>
             <mat-option value='INCIDENT'>Incident</mat-option>
             <mat-option value='ROAD_CONDITION'>Road Condition</mat-option>

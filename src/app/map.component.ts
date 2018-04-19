@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import * as ol from 'ol';
+import * as ol from 'openlayers';
 
 @Component({
   selector: 'app-map',
@@ -10,8 +10,6 @@ import * as ol from 'ol';
 export class MapComponent {
   map: any;
   layerLines: any;
-
-
   defaultZoom: number = 7;
 
   constructor() { }

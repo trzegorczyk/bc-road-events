@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
     selector: 'app-events',
@@ -7,5 +7,12 @@ import { Component } from '@angular/core';
 })
 
 export class EventsComponent {
-    events: any[];
+    @Input() events: any[];
+    @Output() showEvent: EventEmitter<any> = new EventEmitter();
+    selectedEvent: string;
+
+    onEventClick(event) {
+        this.showEvent.emit(event);
+        this.selectedEvent = event.id;
+    }
 }

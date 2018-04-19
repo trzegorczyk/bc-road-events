@@ -1,7 +1,7 @@
 <app-menu (refresh)="refreshEvents($event)"></app-menu>
 <mat-drawer-container class="example-container">
     <mat-drawer mode="side" opened="true">
-        <app-events></app-events>
+        <app-events [events]="events" (showEvent)="showEvent($event)"></app-events>
     </mat-drawer>
     <mat-drawer-content>
         <app-map></app-map>
