@@ -9,12 +9,18 @@ import * as ol from 'openlayers';
 
 export class MapComponent {
   map: any;
+  view: any;
   layerLines: any;
   defaultZoom: number = 7;
 
   constructor() { }
 
   ngOnInit() {
+    this.view =  new ol.View({
+      center: [ol.proj.fromLonLat([-123.3656, 48.4284])],
+      zoom: this.defaultZoom
+    })
+
     setTimeout(() => {
       this.map = new ol.Map({
         target: 'map',
@@ -23,12 +29,14 @@ export class MapComponent {
             source: new ol.source.OSM()
           })
         ],
-        view: new ol.View({
-          center: ol.proj.fromLonLat([-123.3656, 48.4284]),
-          zoom: this.defaultZoom
-        })
+        view: this.view
       });
     }, 200);
+
+    var geolocation = new ol.Geolocation({
+      projection: this.view.getProjection()
+    });
+    geolocation.setTracking(true);
   }
 
   drawFromCoords(type, coordinates) {
@@ -52,6 +60,7 @@ export class MapComponent {
           })
         })
       });
+
       this.map.addLayer(this.layerLines);
       if (this.map.getView().getZoom() !== this.defaultZoom) {
         this.map.getView().animate({ zoom: this.defaultZoom });

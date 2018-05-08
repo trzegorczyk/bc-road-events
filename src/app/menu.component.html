@@ -3,34 +3,41 @@
     <span><img src="../assets/BC.png" class="logo"></span>
     <span>BC Roads</span>
     <span class="line-spacer"></span>
-    <mat-form-field class="p-r-2">
-        <mat-select placeholder="Area" name="area" [ngModel]="area" class="white" (ngModelChange)="Refresh('area', area)">
-            <mat-option value='drivebc.ca/1'>Lower Mainland District</mat-option>
-            <mat-option value='drivebc.ca/2'>Vancouver Island District</mat-option>
-            <mat-option value='drivebc.ca/3'>Rocky Mountain District</mat-option>
-            <mat-option value='drivebc.ca/4'>West Kootenay District</mat-option>
-            <mat-option value='drivebc.ca/5'>Okanagan-Shuswap District</mat-option>
-            <mat-option value='drivebc.ca/6'>Thompson-Nicola District</mat-option>
-            <mat-option value='drivebc.ca/7'>Cariboo District</mat-option>
-            <mat-option value='drivebc.ca/8'>Peace District</mat-option>
-            <mat-option value='drivebc.ca/9'>Fort George District</mat-option>
-            <mat-option value='drivebc.ca/10'>Bulkley Stikine District</mat-option>
-            <mat-option value='drivebc.ca/11'>Skeena District</mat-option>
-        </mat-select>
-    </mat-form-field>
-    <mat-form-field class="p-r-2">
-        <mat-select placeholder="Severity" name="severity" [ngModel]="severity" (ngModelChange)="Refresh('severity', severity)">
-            <mat-option value='MAJOR'>Major</mat-option>
-            <mat-option value='MINOR'>Minor</mat-option>
-        </mat-select>
-    </mat-form-field>
-    <mat-form-field>
-        <mat-select placeholder="Event Type" name="eventType" [ngModel]="eventType" (ngModelChange)="Refresh('eventType', eventType)">
-            <mat-option value='CONSTRUCTION'>Construction</mat-option>
-            <mat-option value='INCIDENT'>Incident</mat-option>
-            <mat-option value='ROAD_CONDITION'>Road Condition</mat-option>
-            <mat-option value='SPECIAL_EVENT'>Special Event</mat-option>
-            <mat-option value='WEATHER_CONDITION'>Weather Condition</mat-option>
-        </mat-select>
-    </mat-form-field>
+    <form [formGroup]="form" (ngSubmit)="onFormSubmit()" >
+        <mat-form-field class="p-r-2">
+            <mat-select placeholder="Area" name="area" [ngModel]="area" class="white" formControlName="area">
+                <mat-option value=''>All</mat-option>
+                <mat-option value='drivebc.ca/1'>Lower Mainland District</mat-option>
+                <mat-option value='drivebc.ca/2'>Vancouver Island District</mat-option>
+                <mat-option value='drivebc.ca/3'>Rocky Mountain District</mat-option>
+                <mat-option value='drivebc.ca/4'>West Kootenay District</mat-option>
+                <mat-option value='drivebc.ca/5'>Okanagan-Shuswap District</mat-option>
+                <mat-option value='drivebc.ca/6'>Thompson-Nicola District</mat-option>
+                <mat-option value='drivebc.ca/7'>Cariboo District</mat-option>
+                <mat-option value='drivebc.ca/8'>Peace District</mat-option>
+                <mat-option value='drivebc.ca/9'>Fort George District</mat-option>
+                <mat-option value='drivebc.ca/10'>Bulkley Stikine District</mat-option>
+                <mat-option value='drivebc.ca/11'>Skeena District</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="p-r-2">
+            <mat-select placeholder="Severity" name="severity" [ngModel]="severity" formControlName="severity">
+                <mat-option value=''>Any</mat-option>
+                <mat-option value='MAJOR'>Major</mat-option>
+                <mat-option value='MINOR'>Minor</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-select placeholder="Event Type" name="eventType" [ngModel]="eventType" formControlName="eventType">
+                <mat-option value=''>Any</mat-option>
+                <mat-option value='CONSTRUCTION'>Construction</mat-option>
+                <mat-option value='INCIDENT'>Incident</mat-option>
+                <mat-option value='ROAD_CONDITION'>Road Condition</mat-option>
+                <mat-option value='SPECIAL_EVENT'>Special Event</mat-option>
+                <mat-option value='WEATHER_CONDITION'>Weather Condition</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <button mat-button type="submit">Update</button>
+    </form>
+
 </mat-toolbar>

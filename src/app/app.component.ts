@@ -43,16 +43,15 @@ export class AppComponent {
     // }
   }
 
-  refreshEvents(options: string) {
-    console.log(options ? options : 'empty');
-    // this._dataService.getEvents(options).subscribe((data: any) => {
-    //   this.data = data;
-    //   console.log(data.events);
-    //   this.eventsComponent.events = data.events;
-    //   console.log(this.eventsComponent.events);
-    //   //localStorage.setItem('BCRoadEvents', JSON.stringify(this.data));
-    //   //localStorage.setItem('BCRoadEventsTimeStamp', JSON.stringify(Date.now()));
-    // }, error => this.errorMessage = <any>error);
+  refreshEvents(options) {
+    console.log(options);
+    this._dataService.getEvents(options).subscribe((data: any) => {
+      this.data = data;
+      this.eventsComponent.events = data.events;
+      console.log(this.eventsComponent.events);
+      //localStorage.setItem('BCRoadEvents', JSON.stringify(this.data));
+      //localStorage.setItem('BCRoadEventsTimeStamp', JSON.stringify(Date.now()));
+    }, error => this.errorMessage = <any>error);
   }
 
   showEvent(event) {

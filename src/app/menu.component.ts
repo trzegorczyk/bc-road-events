@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
     selector: 'app-menu',
@@ -7,39 +8,38 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 
 export class MenuComponent {
-    @Input() severity: string;
-    @Input() eventType: string;
-    @Input() area: string;
-    refresh: EventEmitter<any> = new EventEmitter();
+    form
+    @Output() refresh: EventEmitter<any> = new EventEmitter();
 
-
-    Refresh(type: string, value: string) {
-        if(type){
-            if(type == 'area'){
-                this.area = value;
-            }
-            if(type == 'eventType'){
-                this.area = value;
-            }
-            if(type == 'severity'){
-                this.area = value;
-            }
-        }
-        this.refresh.emit(this.addUrlOptions());
-        console.log(this.addUrlOptions());
+    constructor(private fb: FormBuilder){
+        this.form = fb.group({
+            severity: [''],
+            eventType: [''],
+            area: ['']
+        })
     }
 
-    addUrlOptions() {
+    updateList(){
+
+    }
+
+    onFormSubmit() {
+        console.log(this.form.value);
+        var options = this.addUrlOptions(this.form.value);
+        this.refresh.emit(options);
+    }
+
+    addUrlOptions(options) {
         let url = '';
         let temp = [];
-        if (this.severity && this.severity.length > 0) {
-            temp.push('severity=' + this.severity);
+        if (options.severity && options.severity !== undefined && options.severity.length > 0) {
+            temp.push('severity=' + options.severity);
         }
-        if (this.eventType && this.eventType.length > 0) {
-            temp.push('event_type=' + this.eventType);
+        if (options.eventType && options.eventType !== undefined && options.eventType.length > 0) {
+            temp.push('event_type=' + options.eventType);
         }
-        if (this.area && this.area.length > 0) {
-            temp.push('area_id=' + this.area);
+        if (options.area && options.area !== undefined && options.area.length > 0) {
+            temp.push('area_id=' + options.area);
         }
 
         temp.forEach((value, index, array) => {
