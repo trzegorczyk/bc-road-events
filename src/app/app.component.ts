@@ -56,6 +56,6 @@ export class AppComponent {
 
   showEvent(event) {
     console.log(event);
-    this.mapComponent.drawFromCoords(event.geography.type, event.geography.coordinates);
+    this.mapComponent.drawFromCoords(event);
   }
 }

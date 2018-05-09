@@ -1,26 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import * as ol from 'openlayers';
-
+import { WeatherService } from './weather.service';
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.css']
+  styleUrls: ['./map.component.css'],
+  providers: [WeatherService]
 })
 
 export class MapComponent {
   map: any;
-  view: any;
+  lat = -123.3656;
+  lng = 48.4284;
   layerLines: any;
-  defaultZoom: number = 7;
+  defaultZoom = 7;
 
-  constructor() { }
+  constructor(private _weatherService: WeatherService) { }
 
   ngOnInit() {
-    this.view =  new ol.View({
-      center: [ol.proj.fromLonLat([-123.3656, 48.4284])],
-      zoom: this.defaultZoom
-    })
-
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+       this.lat = position.coords.latitude;
+       this.lng = position.coords.longitude;
+     });
+    }
+    
     setTimeout(() => {
       this.map = new ol.Map({
         target: 'map',
@@ -29,24 +33,31 @@ export class MapComponent {
             source: new ol.source.OSM()
           })
         ],
-        view: this.view
+        view: new ol.View({
+          center: ol.proj.fromLonLat([this.lng, this.lat]),
+          zoom: this.defaultZoom
+        })
       });
-    }, 200);
-
-    var geolocation = new ol.Geolocation({
-      projection: this.view.getProjection()
-    });
-    geolocation.setTracking(true);
+    }, 500);
   }
 
-  drawFromCoords(type, coordinates) {
+  drawFromCoords(event) {
+    let type = event.geography.type;
+    let coordinates = event.geography.coordinates;
+    let overlay = new ol.Overlay({
+      element: document.getElementById('popup-container'),
+      positioning: 'bottom-center',
+      offset: [8, -20]
+    });
+
     if (coordinates && coordinates.length > 0) {
       if (this.layerLines) { this.map.removeLayer(this.layerLines); }
-
+      let point = new ol.geom.Circle(coordinates, 0.001).transform('EPSG:4326', 'EPSG:3857');
+      let line = new ol.geom.LineString(coordinates).transform('EPSG:4326', 'EPSG:3857');
       this.layerLines = new ol.layer.Vector({
         source: new ol.source.Vector({
           features: [new ol.Feature({
-            geometry: type === 'Point' ? new ol.geom.Circle(coordinates, 0.001).transform('EPSG:4326', 'EPSG:3857') : new ol.geom.LineString(coordinates).transform('EPSG:4326', 'EPSG:3857'),
+            geometry: type === 'Point' ? point : line,
             name: 'Line'
           })]
         }),
@@ -61,6 +72,14 @@ export class MapComponent {
         })
       });
 
+      this.map.addOverlay(overlay);   
+      overlay.setPosition(undefined);
+      let overlayCoordinates = type === 'Point' ? point.getCenter() : line.getCoordinateAt(0.5);
+      let popup = event.severity + ' ' + event.headline.replace('_', ' ');
+      overlay.getElement().innerHTML = popup;
+      overlay.setPosition(overlayCoordinates);   
+
+
       this.map.addLayer(this.layerLines);
       if (this.map.getView().getZoom() !== this.defaultZoom) {
         this.map.getView().animate({ zoom: this.defaultZoom });
@@ -70,7 +89,14 @@ export class MapComponent {
       }
       else {
         this.moveToCoordinates(type, coordinates);
-      }
+      } 
+      this._weatherService.getEvents(coordinates[0][1], coordinates[0][0]).subscribe((data: any) => {
+        console.log(data);
+        overlay.getElement().innerHTML += '<br/>' + data.currently.summary
+         + '<br/>Temperature: ' + data.currently.temperature + '&deg;C'
+         + '<br/>Pressure: ' + data.currently.pressure + 'hPa'
+         + '<br/>Wind: ' + data.currently.windSpeed + 'km/h';
+      });
     }
   }
 
@@ -87,4 +113,12 @@ export class MapComponent {
       });
   }
 
+  transformHeadline(value: string): string {
+    let valueArr: string[];
+    valueArr = value.split('_');
+    valueArr.forEach((value, index, array) => {
+        value.toLocaleLowerCase().charAt(0).toUpperCase();
+    });
+    return valueArr.join(' ');
+  }
 }
