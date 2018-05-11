@@ -13,9 +13,9 @@ export class MenuComponent {
 
     constructor(private fb: FormBuilder){
         this.form = fb.group({
-            severity: [''],
-            eventType: [''],
-            area: ['']
+            severity: fb.control(''),
+            eventType: fb.control(''),
+            area: fb.control('')
         })
     }
 

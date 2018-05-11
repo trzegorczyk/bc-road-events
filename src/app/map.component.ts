@@ -64,7 +64,7 @@ export class MapComponent {
         style: new ol.style.Style({
           stroke: new ol.style.Stroke({
             color: 'red',
-            width: 5
+            width: 3
           }),
           fill: new ol.style.Fill({
             color: 'red'
@@ -75,7 +75,7 @@ export class MapComponent {
       this.map.addOverlay(overlay);   
       overlay.setPosition(undefined);
       let overlayCoordinates = type === 'Point' ? point.getCenter() : line.getCoordinateAt(0.5);
-      let popup = event.severity + ' ' + event.headline.replace('_', ' ');
+      let popup = '<div class="centered p-b-2">' + event.severity + ' ' + event.headline.replace('_', ' ') +'</div>';
       overlay.getElement().innerHTML = popup;
       overlay.setPosition(overlayCoordinates);   
 
@@ -90,9 +90,11 @@ export class MapComponent {
       else {
         this.moveToCoordinates(type, coordinates);
       } 
-      this._weatherService.getEvents(coordinates[0][1], coordinates[0][0]).subscribe((data: any) => {
+      let wsCoords = type === 'Point' ? ol.proj.transform(point.getCenter(),'EPSG:3857', 'EPSG:4326') : ol.proj.transform(line.getCoordinateAt(0.5),'EPSG:3857', 'EPSG:4326');
+      this._weatherService.getEvents(wsCoords[1], wsCoords[0]).subscribe((data: any) => {
         console.log(data);
-        overlay.getElement().innerHTML += '<br/>' + data.currently.summary
+        overlay.getElement().innerHTML += '<div class="centered p-b-2">' + this.getIcon(data.currently.icon) + '</div>'
+        + 'Weather: ' + data.currently.summary
          + '<br/>Temperature: ' + data.currently.temperature + '&deg;C'
          + '<br/>Pressure: ' + data.currently.pressure + 'hPa'
          + '<br/>Wind: ' + data.currently.windSpeed + 'km/h';
@@ -120,5 +122,32 @@ export class MapComponent {
         value.toLocaleLowerCase().charAt(0).toUpperCase();
     });
     return valueArr.join(' ');
+  }
+
+  getIcon(icon: string){
+    switch(icon){
+      case "clear-day":
+        return "<i class='wi wi-day-sunny'></i>";
+      case "clear-night":
+        return "<i class='wi wi-night-clear'></i>";
+      case "partly-cloudy-day":
+        return "<i class='wi wi-day-sunny-overcast'></i>";
+      case "partly-cloudy-night":
+        return "<i class='wi wi-night-alt-partly-cloudy'></i>";
+      case "cloudy":
+        return "<i class='wi wi-cloudy'></i>";
+      case "rain":
+        return "<i class='wi wi-rain'></i>";
+      case "sleet":
+        return "<i class='wi wi-sleet'></i>";
+      case "snow":
+        return "<i class='wi wi-snow'></i>";
+      case "wind":
+        return "<i class='wi wi-strong-wind'></i>";
+      case "fog":
+        return "<i class='wi wi-fog'></i>";
+      default: 
+        return "<i class='wi wi-meteor'></i>";
+    }
   }
 }
